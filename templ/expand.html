@@ -1,0 +1,33 @@
+<div>
+  <h1>{{.ExpandURL}}</h1>
+</div>
+
+{{ define "content" }}
+<div class="flex flex-col items-center justify-center">
+  <div id="main">
+    <div class="text-4xl">About</div>
+    <div class="w-full max-w-sm space-y-2">
+      <div class="text-4xl">You are about to be redirected to:</div>
+      <div class="text-2xl">{{.ExpandURL}}</div>
+      <div>
+        <a href="{{.ExpandURL}}">Click here to go to the link</a>
+        <meta http-equiv="refresh" content="5;url={{.ExpandURL}}" />
+        <div>Redirecting in <span id="countdown">5</span> seconds.</div>
+      </div>
+    </div>
+    <script>
+      var countdown = 5;
+      var countdownElement = document.getElementById("countdown");
+      var countdownInterval = setInterval(function () {
+        countdown--;
+        countdownElement.innerText = countdown;
+        console.log(countdown);
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+    </script>
+
+    {{ end }} {{ define "footer" }} {{ template "footer.html" . }} {{ end }}
+  </div>
+</div>

@@ -1,0 +1,17 @@
+{{ define "content" }}
+    <div class="flex flex-col items-center justify-center">
+      <div id="main">
+    <div class="text-4xl">About</div>
+      <div class="w-full max-w-sm space-y-2">
+        <div>
+          This is a simple URL shortener built with Go, HTMX, and Tailwind CSS.
+        </div>
+          <div>
+            It takes a novel approach to URL shortening by using a hash of the URL as the shortened URL. This means that the same URL will always be shortened to the same value. 
+            It uses a dictionary, the index of the word in the dictionary, is hashed to a 3 character string using a custom base62 encoding.
+        <div>
+      </div>
+  {{ end }}
+  {{ define "footer" }}
+  {{ template "footer.html" . }}
+  {{ end }}
