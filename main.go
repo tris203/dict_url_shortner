@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 	"strings"
 )
 
 var words = getDictionary()
-
-const baseURL = "http://localhost:8080/"
 
 type ShortData struct {
 	ShortURL        string
@@ -19,7 +18,7 @@ type ShortData struct {
 }
 
 type ExpandData struct {
-	Title	  string
+	Title     string
 	ExpandURL string
 }
 
@@ -36,12 +35,19 @@ func main() {
 	http.HandleFunc("/expand", getExpand)
 	http.Handle("/static/", http.StripPrefix("/static/", staticFS))
 
-	port := "8080"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	fmt.Printf("Listening on port %s\n", port)
 	http.ListenAndServe(":"+port, nil)
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		baseURL = "http://localhost:8080"
+	}
 	switch r.URL.Path {
 	case "/about":
 		getAbout(w)
@@ -60,6 +66,10 @@ func getAbout(w http.ResponseWriter) {
 }
 
 func getShorten(w http.ResponseWriter, r *http.Request) {
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		baseURL = "http://localhost:8080"
+	}
 	//get url from post body
 	url := r.FormValue("url")
 	if url == "" {

@@ -1,47 +1,46 @@
-    
 {{ define "content" }}
 <div class="flex flex-col items-center justify-center">
-
-      <div id="main">
+  <div id="main">
     <div class="text-4xl">Shorten URL</div>
-      <div class="w-full max-w-sm space-y-2">
-        <div>
-          Enter a URL to shorten. Your shortened URL will be available below.
-        </div>
-        <div class="space-y-2">
-          <form>
-            <input
-              class="w-full rounded-md bg-transparent border border-gray-500 px-2 py-1"
-              id="url"
-              name="url"
-              placeholder="URL"
-              type="url"
-            />
-            <button
-              hx-post="/shorten"
-              hx-params="url"
-              hx-swap="outerHTML"
-              hx-target="#shorten"
-              class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
-              type="submit"
-            >
-              Shorten
-            </button>
-          </form>
-        </div>
+    <div class="w-full max-w-sm space-y-2">
+      <div>
+        Enter a URL to shorten. Your shortened URL will be available below.
       </div>
-      <div
-        class="w-full max-w-sm border rounded-lg p-4 flex-col space-y-2 mt-4 items-center justify-center"
-      >
-        <button
-          class="bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-2 px-4 rounded"
-        >
-          Copy
-        </button>
-      <div class="flex-1 text-wrap" id="shorten">{{.BaseURL}}{{.ExampleShortURL}}</div>
+      <div class="space-y-2">
+        <form>
+          <input
+            class="w-full rounded-md bg-transparent border border-gray-500 px-2 py-1"
+            id="url"
+            name="url"
+            placeholder="URL"
+            type="url"
+          />
+          <button
+            hx-post="/shorten"
+            hx-params="url"
+            hx-swap="outerHTML"
+            hx-target="#shorten"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+            type="submit"
+          >
+            Shorten
+          </button>
+        </form>
       </div>
     </div>
-  {{ end }}
-  {{ define "footer" }}
-  {{ template "footer.html" . }}
-  {{ end }}
+    <div
+      class="w-full max-w-sm border rounded-lg p-4 flex-col space-y-2 mt-4 items-center justify-center"
+    >
+      <button
+        class="bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-2 px-4 rounded"
+        onclick="navigator.clipboard.writeText(document.getElementById('shorten').innerText)"
+      >
+        Copy
+      </button>
+      <div class="flex-1 text-wrap" id="shorten">
+        {{.BaseURL}}{{.ExampleShortURL}}
+      </div>
+    </div>
+  </div>
+  {{ end }} {{ define "footer" }} {{ template "footer.html" . }} {{ end }}
+</div>
