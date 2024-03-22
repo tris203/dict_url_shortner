@@ -46,7 +46,7 @@ func main() {
 func getRoot(w http.ResponseWriter, r *http.Request) {
 	baseURL := os.Getenv("BASE_URL")
 	if baseURL == "" {
-		baseURL = "http://localhost:8080"
+		baseURL = "http://localhost:8080/"
 	}
 	switch r.URL.Path {
 	case "/about":
@@ -68,7 +68,7 @@ func getAbout(w http.ResponseWriter) {
 func getShorten(w http.ResponseWriter, r *http.Request) {
 	baseURL := os.Getenv("BASE_URL")
 	if baseURL == "" {
-		baseURL = "http://localhost:8080"
+		baseURL = "http://localhost:8080/"
 	}
 	//get url from post body
 	url := r.FormValue("url")

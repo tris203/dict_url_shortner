@@ -1,10 +1,5 @@
-<div
-  class="flex-1 text-wrap"
-  id="shorten"
->
-  <div
-    class="mb-2"
-  >{{.BaseURL}}{{.ShortURL}}</div>
+<div class="flex-1 text-wrap" id="shorten">
+  <div class="mb-2"><span id="shorturl">{{.BaseURL}}{{.ShortURL}}</span></div>
   <div>Original Length: {{.OriginalLength}}</div>
   <div>Shortened Length: {{.ShortenedLength}}</div>
 </div>

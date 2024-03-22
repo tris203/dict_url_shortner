@@ -33,12 +33,12 @@
     >
       <button
         class="bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-2 px-4 rounded"
-        onclick="navigator.clipboard.writeText(document.getElementById('shorten').innerText)"
+        onclick="navigator.clipboard.writeText(document.getElementById('shorturl').innerText)"
       >
         Copy
       </button>
       <div class="flex-1 text-wrap" id="shorten">
-        {{.BaseURL}}{{.ExampleShortURL}}
+        <span id="shorturl">{{.BaseURL}}{{.ExampleShortURL}}</span>
       </div>
     </div>
   </div>
