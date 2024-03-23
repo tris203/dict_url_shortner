@@ -27,6 +27,8 @@ type IndexData struct {
 	ExampleShortURL string
 }
 
+var baseURL = getBaseURL(os.Getenv("BASE_URL"))
+
 func main() {
 	router := http.NewServeMux()
 	staticFS := http.FileServer(http.Dir("./static"))
@@ -49,10 +51,6 @@ func main() {
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
-	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "http://localhost:8080/"
-	}
 	switch r.URL.Path {
 	case "/about":
 		getAbout(w)
@@ -72,11 +70,6 @@ func getAbout(w http.ResponseWriter) {
 }
 
 func getShorten(w http.ResponseWriter, r *http.Request) {
-	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "http://localhost:8080/"
-	}
-	//get url from post body
 	url := r.FormValue("url")
 	if url == "" {
 		http.Error(w, "URL is required", http.StatusUnprocessableEntity)
@@ -97,12 +90,7 @@ func getShorten(w http.ResponseWriter, r *http.Request) {
 func getExpand(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/expand.html", "templ/footer.html"))
 	url := r.URL.Path[1:]
-	if url == "" {
-		http.Error(w, "URL is required", http.StatusBadRequest)
-		return
-	}
-	var expandedURL string
-	expandedURL = expandUrl(url, words)
+	var expandedURL = expandUrl(url, words)
 
 	data := ExpandData{ExpandURL: expandedURL, Title: "URL Redirect"}
 	tmpl.Execute(w, data)

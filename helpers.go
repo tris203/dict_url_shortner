@@ -10,3 +10,10 @@ func isValidURL(url string) bool {
 	}
 	return true
 }
+
+func getBaseURL(baseURL string) string {
+	if baseURL == "" {
+		baseURL = "http://localhost:8080/"
+	}
+	return baseURL
+}

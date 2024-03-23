@@ -30,6 +30,12 @@ func TestBase62Encode(t *testing.T) {
 	}
 }
 
+func BenchmarkBase62Encode(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		base62Encode(238327)
+	}
+}
+
 func TestBase62Decode(t *testing.T) {
 	var tests = []struct {
 		input    string
@@ -56,10 +62,22 @@ func TestBase62Decode(t *testing.T) {
 	}
 }
 
+func BenchmarkBase62Decode(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		base62Decode("ZZZ")
+	}
+}
+
 func TestGetDictionary(t *testing.T) {
 	dictionary := getDictionary()
 	if len(dictionary) == 0 {
 		t.Fatalf("getDictionary() = %v; want a non-empty dictionary", dictionary)
+	}
+}
+
+func BenchmarkGetDictionary(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getDictionary()
 	}
 }
 
@@ -89,6 +107,13 @@ func TestShortenURL(t *testing.T) {
 	}
 }
 
+func BenchmarkShortenURL(b *testing.B) {
+	var words = getDictionary()
+	for i := 0; i < b.N; i++ {
+		shortenURL("https://www.google.com", words)
+	}
+}
+
 func TestExpandURL(t *testing.T) {
 	var words = getDictionary()
 	url := "https://www.google.com"
@@ -109,4 +134,19 @@ func TestExpandURL(t *testing.T) {
 		t.Errorf("ExpandURL(%s) = %s; was not unique", shortURL, expandedURL)
 	}
 
+}
+
+func TestExpandEmptyURL(t *testing.T) {
+	var words = getDictionary()
+	expandedURL := expandUrl("", words)
+	if expandedURL != "" {
+		t.Errorf("ExpandURL(%s) = %s; want %s", "", expandedURL, "")
+	}
+}
+
+func BenchmarkExpandURL(b *testing.B) {
+	var words = getDictionary()
+	for i := 0; i < b.N; i++ {
+		expandUrl("IXrIXsIM2LyYLz3LyWIXt", words)
+	}
 }

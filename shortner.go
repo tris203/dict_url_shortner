@@ -30,21 +30,17 @@ const tlds = ".com,.org,.net,.int,.edu,.gov,.mil,.arpa,.ac,.ad,.ae,.af,.ag,.ai,.
 const extensions = ".html,.asp,apsx,.php,.jsp,.htm,.txt"
 const charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-
 func getDictionary() Dictionary {
 	jsonFile, err := os.Open("dictionary.json")
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Successfully Opened dictionary.json")
-
 	defer jsonFile.Close()
 
 	byteValue, _ := io.ReadAll(jsonFile)
 
 	var words Dictionary
 	json.Unmarshal(byteValue, &words)
-	fmt.Println("Loaded ", len(words), " words")
 
 	sort.Slice(words, func(i, j int) bool {
 		return len(words[i]) > len(words[j])
@@ -64,10 +60,6 @@ func getDictionary() Dictionary {
 
 	// append charset to the dictionary
 	words = append(words, strings.Split(charset, "")...)
-
-	// add common words to the dictionary at the beginning
-	fmt.Println("Adding common words to the dictionary", len(addWords))
-	fmt.Println("Total words in dictionary: ", len(words))
 
 	return words
 }
