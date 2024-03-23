@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"slices"
 )
 
 type Dictionary []string
@@ -47,19 +48,12 @@ func getDictionary() Dictionary {
 	})
 	var addWords = []string{}
 
-	addWords = append(strings.Split(tlds, ","), addWords...)
-	addWords = append(strings.Split(extensions, ","), addWords...)
-	addWords = append(commonWords, addWords...)
+	addWords = slices.Concat(padSlice(commonWords, 3334), padSlice(strings.Split(tlds, ","), 3333), padSlice(strings.Split(extensions, ","), 3333))
 
-	// padd addWord to 10,000 to presrve index
-	for i := len(addWords); i < 10000; i++ {
-		addWords = append(addWords, "YOUWILLNEVERFINDMEINAURLORSTUFFAOIJDOJOIAWJDOIJDWIJDWIJ")
-	}
-
-	words = append(words, addWords...)
+	words = slices.Concat(words, addWords)
 
 	// append charset to the dictionary
-	words = append(words, strings.Split(charset, "")...)
+	words = slices.Concat(words, strings.Split(charset, ""))
 
 	return words
 }
@@ -113,16 +107,17 @@ func shortenURL(url string, words Dictionary) string {
 
 func expandUrl(shortened string, words Dictionary) string {
 	var result string
-	for i := 0; i < len(shortened); i += 3 {
+	for i := 0; i < len(shortened); {
 		// if the chunk contains a character that is not in the charset, add it to the result
 		if strings.Index(charset, string(shortened[i])) == -1 {
 			result += string(shortened[i])
-			i -= 2
+			i += 1
 			continue
 		}
 		var chunk = shortened[i : i+3]
 		var idx = base62Decode(chunk)
 		result += words[idx]
+		i += 3
 	}
 	return result
 }

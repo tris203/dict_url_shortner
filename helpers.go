@@ -17,3 +17,10 @@ func getBaseURL(baseURL string) string {
 	}
 	return baseURL
 }
+
+func padSlice(slice []string, length int) []string {
+	for i := len(slice); i < length; i++ {
+		slice = append(slice, "YOUWILLNEVERFINDMEINAURLORSTUFFAOIJDOJOIAWJDOIJDWIJDWIJ")
+	}
+	return slice
+}
