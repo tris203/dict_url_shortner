@@ -32,7 +32,9 @@ var baseURL = getBaseURL(os.Getenv("BASE_URL"))
 func main() {
 	router := http.NewServeMux()
 	staticFS := http.FileServer(http.Dir("./static"))
-	router.HandleFunc("GET /", getRoot)
+	router.HandleFunc("GET /{$}", getRoot)
+	router.HandleFunc("GET /about", getAbout)
+	router.HandleFunc("GET /", getExpand)
 	router.HandleFunc("POST /shorten", getShorten)
 	router.HandleFunc("POST /expand", getExpand)
 	router.Handle("GET /static/", http.StripPrefix("/static/", staticFS))
@@ -51,20 +53,11 @@ func main() {
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
-	switch r.URL.Path {
-	case "/about":
-		getAbout(w)
-	case "/":
 		tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/index.html", "templ/previous.html", "templ/footer.html"))
 		tmpl.Execute(w, IndexData{BaseURL: baseURL, ExampleShortURL: "IXqwWqIXt", Title: "URL Shortener"})
-	case "/favicon.ico":
-		http.NotFound(w, r)
-	default:
-		getExpand(w, r)
-	}
 }
 
-func getAbout(w http.ResponseWriter) {
+func getAbout(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/about.html", "templ/footer.html"))
 	tmpl.Execute(w, IndexData{Title: "About"})
 }
