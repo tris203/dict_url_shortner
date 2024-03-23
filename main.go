@@ -53,7 +53,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 		getAbout(w)
 		return
 	case "/":
-		tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/index.html", "templ/footer.html"))
+		tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/index.html", "templ/previous.html", "templ/footer.html"))
 		tmpl.Execute(w, IndexData{BaseURL: baseURL, ExampleShortURL: "IXqwWqIXt", Title: "URL Shortener"})
 	default:
 		getExpand(w, r)
@@ -73,17 +73,15 @@ func getShorten(w http.ResponseWriter, r *http.Request) {
 	//get url from post body
 	url := r.FormValue("url")
 	if url == "" {
-		tmpl := template.Must(template.ParseFiles("templ/shortenError.html"))
-		tmpl.Execute(w, ShortData{ShortURL: "A URL is required"})
+		http.Error(w, "URL is required", http.StatusUnprocessableEntity)
 		return
 	}
 	if !isValidURL(url) {
-		tmpl := template.Must(template.ParseFiles("templ/shortenError.html"))
-		tmpl.Execute(w, ShortData{ShortURL: "Invalid URL (must start with http:// or https://)"})
+		http.Error(w, "Invalid URL", http.StatusUnprocessableEntity)
 		return
 	}
 	var shortURL string
-	tmpl := template.Must(template.ParseFiles("templ/shorten.html"))
+	tmpl := template.Must(template.ParseFiles("templ/shorten.html", "templ/previous.html"))
 	shortURL = shortenURL(url, words)
 	data := ShortData{ShortURL: shortURL, OriginalLength: len(url), ShortenedLength: len(shortURL), BaseURL: baseURL}
 	tmpl.Execute(w, data)

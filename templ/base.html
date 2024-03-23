@@ -3,11 +3,20 @@
     <link rel="stylesheet" href="/static/css/tailwind.css" />
     <script src="https://unpkg.com/htmx.org@1.9.11"></script>
     <title>{{.Title}}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", (event) => {
+        document.body.addEventListener("htmx:beforeSwap", function (evnt) {
+          if (evnt.detail.xhr.status === 422) {
+            evnt.detail.shouldSwap = true;
+            evnt.detail.isError = false;
+          }
+        });
+      });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
-  <body
-    class="bg-gray-400">
-    {{ template "content" . }}
-    {{ template "footer" . }}
+
+  <body class="bg-gray-400">
+    {{ template "content" . }} {{ template "footer" . }}
   </body>
 </html>

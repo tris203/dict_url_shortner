@@ -1,5 +1,15 @@
-<div class="flex-1 text-wrap" id="shorten">
   <div class="mb-2"><span id="shorturl">{{.BaseURL}}{{.ShortURL}}</span></div>
   <div>Original Length: {{.OriginalLength}}</div>
   <div>Shortened Length: {{.ShortenedLength}}</div>
-</div>
+<script type="text/javascript">
+  function addToLocalStorage() {
+    let newprevious = JSON.parse(localStorage.getItem("previous")) || [];
+    newprevious.unshift("{{.BaseURL}}{{.ShortURL}}");
+    localStorage.setItem("previous", JSON.stringify(newprevious));
+  }
+
+  addToLocalStorage();
+</script>
+<ul id="previous" hx-swap-oob="afterbegin" class="space-y-2 list-disc px-4">
+  <li>{{.BaseURL}}{{.ShortURL}}</li>
+</ul>

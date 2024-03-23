@@ -1,0 +1,20 @@
+<ul id="previous" hx-swap-oob class="space-y-2 list-disc px-4">
+  <script type="text/javascript">
+    // load from local storage
+    const previous = JSON.parse(localStorage.getItem("previous"));
+    const previousList = document.getElementById("previous");
+    if (previous) {
+      // trim to 5 
+      previous.splice(5);
+      previous.forEach((url) => {
+        const li = document.createElement("li");
+        li.textContent = url;
+        previousList.appendChild(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.textContent = "No previous URLs";
+      previousList.appendChild(li);
+    }
+  </script>
+</ul>

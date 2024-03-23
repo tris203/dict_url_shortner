@@ -18,7 +18,7 @@
           <button
             hx-post="/shorten"
             hx-params="url"
-            hx-swap="outerHTML"
+            hx-swap="innerHTML"
             hx-target="#shorten"
             class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
             type="submit"
@@ -41,6 +41,14 @@
         <span id="shorturl">{{.BaseURL}}{{.ExampleShortURL}}</span>
       </div>
     </div>
+    <div
+      class="w-full max-w-sm border rounded-lg p-4 flex-col space-y-2 mt-4 items-center justify-center"
+    >
+      <div class="text-2xl">Previous Shortened URLs</div>
+      <div class="flex-1 text-wrap">
+        {{ template "previous.html" . }} {{ end }}
+      </div>
+    </div>
+    {{ define "footer" }} {{ template "footer.html" . }} {{ end }}
   </div>
-  {{ end }} {{ define "footer" }} {{ template "footer.html" . }} {{ end }}
 </div>
