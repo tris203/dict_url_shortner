@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
 )
 
 var words = getDictionary()
@@ -29,18 +28,24 @@ type IndexData struct {
 }
 
 func main() {
+	router := http.NewServeMux()
 	staticFS := http.FileServer(http.Dir("./static"))
-	http.HandleFunc("/", getRoot)
-	http.HandleFunc("/shorten", getShorten)
-	http.HandleFunc("/expand", getExpand)
-	http.Handle("/static/", http.StripPrefix("/static/", staticFS))
+	router.HandleFunc("GET /", getRoot)
+	router.HandleFunc("POST /shorten", getShorten)
+	router.HandleFunc("POST /expand", getExpand)
+	router.Handle("GET /static/", http.StripPrefix("/static/", staticFS))
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: Logging(router),
+	}
+
 	fmt.Printf("Listening on port %s\n", port)
-	http.ListenAndServe(":"+port, nil)
+	server.ListenAndServe()
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
@@ -51,10 +56,11 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/about":
 		getAbout(w)
-		return
 	case "/":
 		tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/index.html", "templ/previous.html", "templ/footer.html"))
 		tmpl.Execute(w, IndexData{BaseURL: baseURL, ExampleShortURL: "IXqwWqIXt", Title: "URL Shortener"})
+	case "/favicon.ico":
+		http.NotFound(w, r)
 	default:
 		getExpand(w, r)
 	}
@@ -92,7 +98,6 @@ func getExpand(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templ/base.html", "templ/expand.html", "templ/footer.html"))
 	url := r.URL.Path[1:]
 	if url == "" {
-		fmt.Println("URL is required")
 		http.Error(w, "URL is required", http.StatusBadRequest)
 		return
 	}
@@ -101,11 +106,4 @@ func getExpand(w http.ResponseWriter, r *http.Request) {
 
 	data := ExpandData{ExpandURL: expandedURL, Title: "URL Redirect"}
 	tmpl.Execute(w, data)
-}
-
-func isValidURL(url string) bool {
-	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
-		return false
-	}
-	return true
 }
